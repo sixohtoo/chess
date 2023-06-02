@@ -53,3 +53,12 @@ void cleanup()
 {
     SDL_Quit();
 }
+
+State initState()
+{
+    State state = malloc(sizeof(struct state));
+    state->board = malloc(sizeof(struct square) * NUM_SQUARES_ROW * NUM_SQUARES_ROW);
+    state->turn = 1;
+    state->playerTurn = WHITE;
+    return state;
+}

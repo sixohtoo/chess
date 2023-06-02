@@ -12,4 +12,7 @@ App initApp();
 // Cleans up code
 void cleanup();
 
+// Initialises state
+State initState();
+
 #endif

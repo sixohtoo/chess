@@ -12,6 +12,8 @@ int main()
     App app = initApp();
     initSDL(app);
 
+    State state = initState();
+
     printf("Starting chess!\n");
 
     atexit(cleanup);
