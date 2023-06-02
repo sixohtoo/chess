@@ -1,0 +1,14 @@
+// Contains all the constants used
+#ifndef GAME_CONSTANTS
+#define GAME_CONSTANTS
+
+#define GAME_CONSTANTS
+#define SCREEN_HEIGHT 800
+#define SCREEN_WIDTH 1200
+
+#define CHESS_BOARD_HEIGHT 600
+#define CHESS_BOARD_WIDTH 600
+#define CHESS_BOARD_BORDER 100
+#define CHESS_SQUARE_SIZE CHESS_BOARD_WIDTH / 8
+
+#endif

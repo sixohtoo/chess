@@ -5,7 +5,7 @@ SRC_FILES = ${wildcard ${SRC_DIR}/*.c}
 OBJ_NAME = play
 INCLUDE_PATHS = -Iinclude
 LIBRARY_PATHS = -Llib
-COMPILER_FLAGS = -Wall -g -O0
+COMPILER_FLAGS = -Wall -g -O0 -Werror
 LINKER_FLAGS = -lsdl2
 
 all:

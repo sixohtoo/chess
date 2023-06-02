@@ -1,18 +1,28 @@
 #include <stdio.h>
 #include <SDL2/SDL.h>
+#define SDL_MAIN_HANDLED
+#include "constants.h"
+#include "init.h"
+#include "types.h"
+#include "draw.h"
+#include "input.h"
 
 int main()
 {
-    if (SDL_Init(SDL_INIT_EVERYTHING) > 0)
+    App app = initApp();
+    initSDL(app);
+
+    printf("Starting chess!\n");
+
+    atexit(cleanup);
+
+    while (1)
     {
-        printf("SDL_Init went wrong... %s", SDL_GetError());
-        return EXIT_FAILURE;
+        prepareScene(app);
+        doInput();
+        presentScene(app);
+        SDL_Delay(50);
     }
-
-    printf("HELLO %s\n", "mate");
-    printf("ok do this now\n");
-
-    SDL_Quit();
 
     return EXIT_SUCCESS;
 }
