@@ -9,10 +9,9 @@
 
 int main()
 {
-    App app = initApp();
+    char *saveName = "pawn";
+    App app = initApp(saveName);
     initSDL(app);
-
-    State state = initState();
 
     printf("Starting chess!\n");
 
@@ -21,9 +20,9 @@ int main()
     while (1)
     {
         prepareScene(app);
-        doInput();
+        doInput(app);
         presentScene(app);
-        SDL_Delay(50);
+        SDL_Delay(TICK_DELAY);
     }
 
     return EXIT_SUCCESS;

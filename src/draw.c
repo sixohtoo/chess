@@ -4,13 +4,15 @@
 #include <stdio.h>
 
 void drawChessBoard(App app);
+void placePieces(App app);
 
 void prepareScene(App app)
 {
     SDL_SetRenderDrawColor(app->renderer, 96, 128, 255, 255);
     SDL_RenderClear(app->renderer);
     drawChessBoard(app);
-    printf("Rendered board\n");
+    // placePieces(app);
+    // printf("Rendered board\n");
 }
 
 void drawChessBoard(App app)
@@ -24,6 +26,7 @@ void drawChessBoard(App app)
     // SDL_RenderCl
     SDL_RenderFillRect(app->renderer, &rect);
 
+    // Draws light coloured squares
     SDL_SetRenderDrawColor(app->renderer, 220, 200, 200, 255);
     for (int row = 0; row < 4; row += 1)
     {
@@ -43,9 +46,27 @@ void drawChessBoard(App app)
             SDL_RenderFillRect(app->renderer, &square2);
         }
     }
+
+    placePieces(app);
+}
+
+void placePieces(App app)
+{
+    PieceNode curr = app->state->pieces->head;
+    while (curr != NULL)
+    {
+        SDL_SetRenderDrawColor(app->renderer, 105, 250, 250, 210);
+        SDL_RenderFillRect(app->renderer, curr->piece->img);
+        curr = curr->next;
+    }
 }
 
 void presentScene(App app)
 {
     SDL_RenderPresent(app->renderer);
 }
+
+// SDL_Rect getSprite(enum PieceType piece, enum Colour colour)
+// {
+
+// }

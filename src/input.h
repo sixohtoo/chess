@@ -2,6 +2,6 @@
 #define GAME_INPUT
 
 // Reads input from user
-void doInput();
+void doInput(App app);
 
 #endif
