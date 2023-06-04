@@ -55,8 +55,9 @@ void placePieces(App app)
     PieceNode curr = app->state->pieces->head;
     while (curr != NULL)
     {
-        SDL_SetRenderDrawColor(app->renderer, 105, 250, 250, 210);
-        SDL_RenderFillRect(app->renderer, curr->piece->img);
+        SDL_RenderCopy(app->renderer, curr->piece->img, curr->piece->img_src, curr->piece->img_dest);
+        // SDL_SetRenderDrawColor(app->renderer, 105, 250, 250, 210);
+        // SDL_RenderFillRect(app->renderer, curr->piece->img);
         curr = curr->next;
     }
 }

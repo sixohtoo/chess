@@ -2,6 +2,7 @@
 #include "types.h"
 #include "utils.h"
 #include "unsorted.h"
+#include "constants.h"
 
 void mouseDownInput(App app, SDL_MouseButtonEvent e);
 void mouseUpInput(App app, SDL_MouseButtonEvent e);
@@ -69,8 +70,8 @@ void mouseUpInput(App app, SDL_MouseButtonEvent e)
         }
         else
         {
-            selected->img->x = selected->square->coord_x;
-            selected->img->y = selected->square->coord_y;
+            selected->img_dest->x = selected->square->coord_x;
+            selected->img_dest->y = selected->square->coord_y;
         }
 
         app->state->selected = NULL;
@@ -82,7 +83,7 @@ void mouseMotionInput(App app, SDL_Event e)
     Piece selected = app->state->selected;
     if (e.button.button == SDL_BUTTON_LEFT && selected != NULL)
     {
-        selected->img->x = e.motion.x;
-        selected->img->y = e.motion.y;
+        selected->img_dest->x = e.motion.x - PIECE_SIZE / 2;
+        selected->img_dest->y = e.motion.y - PIECE_SIZE / 2;
     }
 }

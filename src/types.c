@@ -4,6 +4,8 @@
 #include <SDL2/SDL.h>
 #include <stdlib.h>
 
+SDL_Rect *getSprite(enum PieceType type, enum Colour colour);
+
 enum PieceType getPiece(char c)
 {
     switch (toLower(c))
@@ -34,7 +36,7 @@ enum Colour getColour(char c)
     return BLACK;
 }
 
-Piece createPiece(int row, int col, char c, SDL_Rect *img, Square square)
+Piece createPiece(int row, int col, char c, SDL_Rect *img_dest, SDL_Texture *img, Square square)
 {
     Piece piece = malloc(sizeof(struct piece));
     piece->row = row;
@@ -43,6 +45,8 @@ Piece createPiece(int row, int col, char c, SDL_Rect *img, Square square)
     piece->colour = getColour(c);
     piece->moved = 0;
     piece->img = img;
+    piece->img_dest = img_dest;
+    piece->img_src = getSprite(piece->type, piece->colour);
     piece->square = square;
     square->piece = piece;
     return piece;
@@ -58,4 +62,14 @@ Square createSquare(int row, int col)
     square->colour = (row + col) % 2 ? BLACK : WHITE;
     square->piece = NULL;
     return square;
+}
+
+SDL_Rect *getSprite(enum PieceType type, enum Colour colour)
+{
+    SDL_Rect *rect = malloc(sizeof(struct SDL_Rect));
+    rect->w = PIECE_SIZE;
+    rect->h = PIECE_SIZE;
+    rect->x = PIECE_SIZE * type;
+    rect->y = PIECE_SIZE * colour;
+    return rect;
 }

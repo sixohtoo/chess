@@ -5,10 +5,10 @@
 #include "types.h"
 
 // Initalises SDL and creates renderer and window
-void initSDL(App app);
+App initSDL();
 
 // Initialises the app struct
-App initApp(char *saveName);
+void initApp(App app, char *saveName);
 
 // Cleans up code
 void cleanup();

@@ -10,19 +10,19 @@ typedef struct piece *Piece;
 
 enum PieceType
 {
-    PAWN,
-    KNIGHT,
-    BISHOP,
-    ROOK,
     QUEEN,
     KING,
+    ROOK,
+    KNIGHT,
+    BISHOP,
+    PAWN,
     NONE,
 };
 
 enum Colour
 {
-    WHITE,
-    BLACK
+    BLACK,
+    WHITE
 };
 
 struct square
@@ -37,15 +37,15 @@ struct square
 
 struct piece
 {
-    int row;
-    int col;
-    // int coord_x;
-    // int coord_y;
-    enum Colour colour;
-    enum PieceType type;
-    int moved;
-    SDL_Rect *img;
-    Square square;
+    int row;             // row in 2d array
+    int col;             // col in 2d array
+    enum Colour colour;  // colour (white or black)
+    enum PieceType type; // type of piece
+    int moved;           // has moved (for castling)
+    Square square;       // Square piece is on
+    SDL_Texture *img;    // image texture
+    SDL_Rect *img_src;   // image position on spirte
+    SDL_Rect *img_dest;  // image position on window
 };
 
 typedef struct piece_node
@@ -94,7 +94,7 @@ typedef struct coord
     int y;
 } *Coord;
 
-Piece createPiece(int row, int col, char c, SDL_Rect *img, Square square);
+Piece createPiece(int row, int col, char c, SDL_Rect *img_dest, SDL_Texture *img, Square square);
 Square createSquare(int row, int col);
 enum PieceType getPiece(char c);
 enum Colour getColour(char c);

@@ -17,12 +17,15 @@
 #define MAX_SAVE_LENGTH 1024
 #define DEFAULT_SAVE "default"
 #define MAX_FILE_NAME 100
+#define LOAD_NAME "default"
 
-#define PIECE_SIZE 50
-#define PIECE_OFFSET (CHESS_SQUARE_SIZE / 6)
+#define PIECE_SIZE 60
+#define PIECE_OFFSET (CHESS_SQUARE_SIZE / 8)
 
 #define TICK_DELAY 100
 
 #define INVALID_COORD -1
+
+#define SPRITE "imgs/pieces_sprite.png"
 
 #endif

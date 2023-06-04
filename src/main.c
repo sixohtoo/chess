@@ -9,9 +9,9 @@
 
 int main()
 {
-    char *saveName = "pawn";
-    App app = initApp(saveName);
-    initSDL(app);
+    char *saveName = LOAD_NAME;
+    App app = initSDL();
+    initApp(app, saveName);
 
     printf("Starting chess!\n");
 

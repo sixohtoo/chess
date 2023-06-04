@@ -8,6 +8,6 @@ void moveSelectedPiece(App app, struct coord dest)
     Square dest_square = app->state->board[dest.x][dest.y];
     selected->square = dest_square;
     dest_square->piece = selected;
-    selected->img->x = dest_square->coord_x;
-    selected->img->y = dest_square->coord_y;
+    selected->img_dest->x = dest_square->coord_x;
+    selected->img_dest->y = dest_square->coord_y;
 }

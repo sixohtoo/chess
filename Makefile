@@ -3,8 +3,8 @@ BUILD_DIR = build/debug
 CC = gcc
 SRC_FILES = ${wildcard ${SRC_DIR}/*.c}
 OBJ_NAME = play
-INCLUDE_PATHS = -Iinclude
-LIBRARY_PATHS = -Llib
+INCLUDE_PATHS = -Iinclude 
+LIBRARY_PATHS = -Llib -lSDL2_image
 COMPILER_FLAGS = -Wall -g -O0
 LINKER_FLAGS = -lsdl2
 
