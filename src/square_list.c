@@ -4,12 +4,12 @@
 
 SquareNode initSquareNode(Square square);
 
-SquareList initSquareList()
-{
-    SquareList list = malloc(sizeof(struct square_list));
-    list->head = NULL;
-    return list;
-}
+// SquareList initSquareList()
+// {
+//     SquareList list = malloc(sizeof(struct square_list));
+//     list->head = NULL;
+//     return list;
+// }
 
 SquareNode initSquareNode(Square square)
 {
@@ -19,31 +19,36 @@ SquareNode initSquareNode(Square square)
     return node;
 }
 
-SquareList addSquare(SquareList list, Square square)
+SquareNode addSquare(SquareNode list, Square square)
 {
     SquareNode node = initSquareNode(square);
-    SquareNode curr = list->head;
+    SquareNode curr = list;
 
     // If adding the first square
-    if (list->head == NULL)
+    if (list == NULL)
     {
-        list->head = node;
-        return list;
+        // list->head = node;
+        return node;
     }
 
     // Add square to end of list
     while (curr->next != NULL)
     {
+        if (curr->square == square)
+        {
+            return list;
+        }
         curr = curr->next;
     }
 
     curr->next = node;
     return list;
+    // return list;
 }
 
-SquareList removeSquare(SquareList list, Square square)
+SquareNode removeSquare(SquareNode list, Square square)
 {
-    SquareNode curr = list->head;
+    SquareNode curr = list;
 
     // No squaress on the board
     if (curr == NULL)
@@ -54,9 +59,9 @@ SquareList removeSquare(SquareList list, Square square)
     // Remove the first squares in list
     if (curr->square == square)
     {
-        list->head = list->head->next;
-        free(curr);
-        return list;
+        curr = curr->next;
+        free(list);
+        return curr;
     }
 
     // Find square to remove
@@ -75,16 +80,34 @@ SquareList removeSquare(SquareList list, Square square)
     return list;
 }
 
-void freeSquareList(SquareList list)
+SquareNode clearSquareList(SquareNode list)
 {
     SquareNode temp;
-    SquareNode curr = list->head;
+    SquareNode curr = list;
     while (curr != NULL)
     {
         temp = curr;
         curr = curr->next;
         free(temp);
     }
-    free(temp);
-    free(list);
+    return NULL;
+}
+
+void freeSquareList(SquareNode list)
+{
+    clearSquareList(list);
+}
+
+int containsSquareList(SquareNode list, struct coord c)
+{
+    SquareNode curr = list;
+    while (curr != NULL)
+    {
+        if (curr->square->row == c.x && curr->square->col == c.y)
+        {
+            return 1;
+        }
+        curr = curr->next;
+    }
+    return 0;
 }

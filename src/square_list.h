@@ -3,8 +3,10 @@
 
 #include "types.h"
 
-SquareList initSquareList();
-SquareList addSquare(SquareList list, Square square);
-SquareList removeSquare(SquareList list, Square square);
-void freeSquareList(SquareList list);
+// SquareList initSquareList();
+SquareNode addSquare(SquareNode list, Square square);
+SquareNode clearSquareList(SquareNode list);
+SquareNode removeSquare(SquareNode list, Square square);
+void freeSquareList(SquareNode list);
+int containsSquareList(SquareNode list, struct coord c);
 #endif

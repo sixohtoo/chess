@@ -9,6 +9,7 @@ void placePieces(App app);
 void prepareScene(App app)
 {
     SDL_SetRenderDrawColor(app->renderer, 96, 128, 255, 255);
+    // SDL_Render
     SDL_RenderClear(app->renderer);
     drawChessBoard(app);
     // placePieces(app);
@@ -32,19 +33,19 @@ void drawChessBoard(App app)
     {
         for (int col = 0; col < 4; col += 1)
         {
-            SDL_Rect square1 = {
-                row * 2 * CHESS_SQUARE_SIZE + CHESS_BOARD_BORDER,
-                col * 2 * CHESS_SQUARE_SIZE + CHESS_BOARD_BORDER,
-                CHESS_SQUARE_SIZE,
-                CHESS_SQUARE_SIZE};
-            SDL_RenderFillRect(app->renderer, &square1);
-            SDL_Rect square2 = {
-                row * 2 * CHESS_SQUARE_SIZE + CHESS_BOARD_BORDER + CHESS_SQUARE_SIZE,
-                col * 2 * CHESS_SQUARE_SIZE + CHESS_BOARD_BORDER + CHESS_SQUARE_SIZE,
-                CHESS_SQUARE_SIZE,
-                CHESS_SQUARE_SIZE};
-            SDL_RenderFillRect(app->renderer, &square2);
+            SDL_RenderFillRect(app->renderer, app->state->board[row * 2][col * 2]->rect);
+            SDL_RenderFillRect(app->renderer, app->state->board[row * 2 + 1][col * 2 + 1]->rect);
         }
+    }
+
+    // Draw legal moves
+    SDL_SetRenderDrawBlendMode(app->renderer, SDL_BLENDMODE_BLEND);
+    SDL_SetRenderDrawColor(app->renderer, 250, 128, 114, 200);
+    SquareNode curr = app->state->displayedSquares;
+    while (curr != NULL)
+    {
+        SDL_RenderFillRect(app->renderer, curr->square->rect);
+        curr = curr->next;
     }
 
     placePieces(app);
@@ -52,7 +53,7 @@ void drawChessBoard(App app)
 
 void placePieces(App app)
 {
-    PieceNode curr = app->state->pieces->head;
+    PieceNode curr = app->state->pieces;
     while (curr != NULL)
     {
         SDL_RenderCopy(app->renderer, curr->piece->img, curr->piece->img_src, curr->piece->img_dest);

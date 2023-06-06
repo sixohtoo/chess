@@ -3,6 +3,8 @@
 #include "utils.h"
 #include "unsorted.h"
 #include "constants.h"
+#include "piece.h"
+#include "square_list.h"
 
 void mouseDownInput(App app, SDL_MouseButtonEvent e);
 void mouseUpInput(App app, SDL_MouseButtonEvent e);
@@ -20,11 +22,11 @@ void doInput(App app)
             exit(EXIT_SUCCESS);
             break;
         case SDL_MOUSEBUTTONDOWN:
-            printf("click!\n");
+            // printf("click!\n");
             mouseDownInput(app, event.button);
             break;
         case SDL_MOUSEBUTTONUP:
-            printf("released!\n");
+            // printf("released!\n");
             mouseUpInput(app, event.button);
             break;
         case SDL_MOUSEMOTION:
@@ -42,16 +44,23 @@ void mouseDownInput(App app, SDL_MouseButtonEvent e)
     {
         struct coord pointer = {e.x, e.y};
         struct coord grid = coord_to_grid(pointer);
-
-        Piece piece = piece_from_coord(app->state->board, grid);
-        printPieceType(piece);
-        if (piece == NULL)
+        if (!isValidCoord(grid))
         {
             return;
         }
 
-        app->state->selected = piece;
-        printf("Selected piece");
+        Piece piece = piece_from_coord(app->state->board, grid);
+        if (piece == NULL)
+        {
+            app->state->displaying = NULL;
+        }
+        else
+        {
+            app->state->selected = piece;
+            app->state->displaying = piece;
+            getLegalMoves(app);
+        }
+        // printf("Selected piece");
     }
 }
 
@@ -60,11 +69,12 @@ void mouseUpInput(App app, SDL_MouseButtonEvent e)
     Piece selected = app->state->selected;
     if (e.button == SDL_BUTTON_LEFT && selected != NULL)
     {
+        // struct coord selected_piece_coord = coordFromPiece(selected);
         struct coord pointer = {e.x, e.y};
         struct coord grid = coord_to_grid(pointer);
-        printf("(%d, %d)\n", grid.x, grid.y);
+        // printf("(%d, %d)\n", grid.x, grid.y);
 
-        if (isValidCoord(grid))
+        if (isValidCoord(grid) && containsSquareList(app->state->displayedSquares, grid))
         {
             moveSelectedPiece(app, grid);
         }

@@ -4,12 +4,12 @@
 
 PieceNode initPieceNode(Piece piece);
 
-PieceList initPieceList()
-{
-    PieceList list = malloc(sizeof(struct piece_list));
-    list->head = NULL;
-    return list;
-}
+// PieceList initPieceList()
+// {
+//     PieceList list = malloc(sizeof(struct piece_list));
+//     list->head = NULL;
+//     return list;
+// }
 
 PieceNode initPieceNode(Piece piece)
 {
@@ -19,16 +19,15 @@ PieceNode initPieceNode(Piece piece)
     return node;
 }
 
-PieceList addPiece(PieceList list, Piece piece)
+PieceNode addPiece(PieceNode list, Piece piece)
 {
     PieceNode node = initPieceNode(piece);
-    PieceNode curr = list->head;
+    PieceNode curr = list;
 
     // If adding the first piece
-    if (list->head == NULL)
+    if (list == NULL)
     {
-        list->head = node;
-        return list;
+        return node;
     }
 
     // Add piece to end of list
@@ -40,9 +39,9 @@ PieceList addPiece(PieceList list, Piece piece)
     return list;
 }
 
-PieceList removePiece(PieceList list, Piece piece)
+PieceNode removePiece(PieceNode list, Piece piece)
 {
-    PieceNode curr = list->head;
+    PieceNode curr = list;
     // No pieces on the board
     if (curr == NULL)
     {
@@ -52,9 +51,9 @@ PieceList removePiece(PieceList list, Piece piece)
     // Remove the first piece in list
     if (curr->piece == piece)
     {
-        list->head = list->head->next;
-        free(curr);
-        return list;
+        curr = curr->next;
+        free(list);
+        return curr;
     }
 
     // Find piece to remove
@@ -74,16 +73,14 @@ PieceList removePiece(PieceList list, Piece piece)
     return list;
 }
 
-void freePieceList(PieceList list)
+void freePieceList(PieceNode list)
 {
     PieceNode temp;
-    PieceNode curr = list->head;
+    PieceNode curr = list;
     while (curr != NULL)
     {
         temp = curr;
         curr = curr->next;
         free(temp);
     }
-    free(temp);
-    free(list);
 }

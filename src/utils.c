@@ -3,7 +3,7 @@
 
 struct coord square_num_to_coord(int num)
 {
-    struct coord c = {num % 8, num / 8};
+    struct coord c = {num / 8, num % 8};
     return c;
 }
 
@@ -18,8 +18,8 @@ char toLower(char c)
 
 struct coord coord_to_grid(struct coord c)
 {
-    float x = (c.x * 1.0 - CHESS_BOARD_BORDER) / (CHESS_SQUARE_SIZE);
-    float y = (c.y * 1.0 - CHESS_BOARD_BORDER) / (CHESS_SQUARE_SIZE);
+    float x = (c.y * 1.0 - CHESS_BOARD_BORDER) / (CHESS_SQUARE_SIZE);
+    float y = (c.x * 1.0 - CHESS_BOARD_BORDER) / (CHESS_SQUARE_SIZE);
     struct coord ret =
         {
             x >= 0 && x < NUM_SQUARES_ROW ? x : INVALID_COORD,
@@ -35,6 +35,16 @@ int isValidCoord(struct coord c)
 Piece piece_from_coord(Board board, struct coord c)
 {
     return board[c.x][c.y]->piece;
+}
+
+Square getSquareFromCoord(App app, struct coord c)
+{
+    return app->state->board[c.x][c.y]; // RONEN CHANGED THIS.
+}
+
+int coordEqual(struct coord a, struct coord b)
+{
+    return a.x == b.x && a.y == b.y;
 }
 
 void printPieceType(Piece piece)

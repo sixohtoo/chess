@@ -8,6 +8,7 @@
 #include "init.h"
 #include "piece_list.h"
 #include "utils.h"
+#include "square_list.h"
 
 void initPieces(App app, char *filename);
 void initBoard(State state);
@@ -80,9 +81,11 @@ State initState(App app, char *saveName)
     app->state = state;
     initBoard(state);
     state->selected = NULL;
+    state->displaying = NULL;
+    state->displayedSquares = NULL;
     state->turn = 1;
     state->playerTurn = WHITE;
-    state->pieces = initPieceList();
+    state->pieces = NULL;
     initPieces(app, saveName);
     return state;
 }
@@ -113,7 +116,7 @@ void initPieces(App app, char *saveName)
     }
     char contents[MAX_SAVE_LENGTH];
     fgets(contents, MAX_SAVE_LENGTH, file);
-    printf("%s\n", contents);
+    // printf("%s\n", contents);
 
     // SDL_Surface *surface = IMG_Load("imgs/pieces_sprite.png");
     // SDL_Texture *texture = SDL_CreateTextureFromSurface(app->renderer, surface);
@@ -127,24 +130,13 @@ void initPieces(App app, char *saveName)
 
     for (int i = 0; i < TOTAL_SQUARES; i++)
     {
-        printf("%d\n", i);
+        // printf("%d\n", i);
         if (contents[i] != '.')
         {
             struct coord c = square_num_to_coord(i);
-            if (contents[i] == 'P')
-            {
-                printf("black\n");
-            }
-            // printf("%c\n", contents[i]);
-            // SDL_SetRenderDrawColor(app->renderer, 105, 250, 250, 210);
-            // SDL_Rect rect = {
-            //     CHESS_BOARD_BORDER + c.x * CHESS_SQUARE_SIZE + CHESS_SQUARE_SIZE / 2,
-            //     CHESS_BOARD_BORDER + c.y * CHESS_SQUARE_SIZE + CHESS_SQUARE_SIZE / 2,
-            //     PIECE_SIZE,
-            //     PIECE_SIZE};
             SDL_Rect *rect = malloc(sizeof(SDL_Rect)); // where piece will be
-            rect->x = CHESS_BOARD_BORDER + c.x * CHESS_SQUARE_SIZE + PIECE_OFFSET;
-            rect->y = CHESS_BOARD_BORDER + c.y * CHESS_SQUARE_SIZE + PIECE_OFFSET;
+            rect->y = CHESS_BOARD_BORDER + c.x * CHESS_SQUARE_SIZE + PIECE_OFFSET;
+            rect->x = CHESS_BOARD_BORDER + c.y * CHESS_SQUARE_SIZE + PIECE_OFFSET;
             rect->w = PIECE_SIZE;
             rect->h = PIECE_SIZE;
 
@@ -153,11 +145,11 @@ void initPieces(App app, char *saveName)
             Square square = app->state->board[c.x][c.y];
             Piece piece = createPiece(c.x, c.y, contents[i], rect, img, square); // will rect be freed?
             // SDL_RenderFillRect(app->renderer, rect);
-            addPiece(app->state->pieces, piece);
+            app->state->pieces = addPiece(app->state->pieces, piece);
         }
     }
 
-    printf("head is %p\n", app->state->pieces->head);
+    // printf("head is %p\n", app->state->pieces->head);
 
     // Create pawns
     // Create rooks

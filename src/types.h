@@ -33,6 +33,7 @@ struct square
     int coord_x;
     int coord_y;
     Piece piece;
+    SDL_Rect *rect;
 };
 
 struct piece
@@ -41,7 +42,7 @@ struct piece
     int col;             // col in 2d array
     enum Colour colour;  // colour (white or black)
     enum PieceType type; // type of piece
-    int moved;           // has moved (for castling)
+    int moves;           // num moves (for pawn first move and castling)
     Square square;       // Square piece is on
     SDL_Texture *img;    // image texture
     SDL_Rect *img_src;   // image position on spirte
@@ -54,10 +55,10 @@ typedef struct piece_node
     Piece piece;
 } *PieceNode;
 
-typedef struct piece_list
-{
-    PieceNode head;
-} *PieceList;
+// typedef struct piece_list
+// {
+//     PieceNode head;
+// } *PieceList;
 
 typedef struct square_node
 {
@@ -65,20 +66,22 @@ typedef struct square_node
     Square square;
 } *SquareNode;
 
-typedef struct square_list
-{
-    SquareNode head;
-} *SquareList;
+// typedef struct square_list
+// {
+//     SquareNode head;
+// } *SquareList;
 
 typedef Square **Board;
 
 typedef struct state
 {
-    Board board;
-    int turn;
-    enum Colour playerTurn;
-    PieceList pieces;
-    Piece selected;
+    Board board;                 // grid in backend
+    int turn;                    // turn number
+    enum Colour playerTurn;      // player's turn
+    PieceNode pieces;            // List of all pieces on the board
+    Piece selected;              // Currently dragging piece
+    Piece displaying;            // Currently displaying legal moves piece
+    SquareNode displayedSquares; // List of legal moves
 } *State;
 
 typedef struct app

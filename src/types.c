@@ -43,7 +43,7 @@ Piece createPiece(int row, int col, char c, SDL_Rect *img_dest, SDL_Texture *img
     piece->col = col;
     piece->type = getPiece(c);
     piece->colour = getColour(c);
-    piece->moved = 0;
+    piece->moves = 0;
     piece->img = img;
     piece->img_dest = img_dest;
     piece->img_src = getSprite(piece->type, piece->colour);
@@ -57,10 +57,16 @@ Square createSquare(int row, int col)
     Square square = malloc(sizeof(struct square));
     square->row = row;
     square->col = col;
-    square->coord_x = CHESS_BOARD_BORDER + row * CHESS_SQUARE_SIZE + CHESS_SQUARE_SIZE / 6;
-    square->coord_y = CHESS_BOARD_BORDER + col * CHESS_SQUARE_SIZE + CHESS_SQUARE_SIZE / 6;
+    square->coord_x = CHESS_BOARD_BORDER + col * CHESS_SQUARE_SIZE + CHESS_SQUARE_SIZE / 6;
+    square->coord_y = CHESS_BOARD_BORDER + row * CHESS_SQUARE_SIZE + CHESS_SQUARE_SIZE / 6;
     square->colour = (row + col) % 2 ? BLACK : WHITE;
     square->piece = NULL;
+    square->rect = malloc(sizeof(struct SDL_Rect));
+    square->rect->h = CHESS_SQUARE_SIZE;
+    square->rect->w = CHESS_SQUARE_SIZE;
+    square->rect->x = CHESS_BOARD_BORDER + col * CHESS_SQUARE_SIZE;
+    square->rect->y = CHESS_BOARD_BORDER + row * CHESS_SQUARE_SIZE;
+
     return square;
 }
 

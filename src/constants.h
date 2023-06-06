@@ -17,7 +17,7 @@
 #define MAX_SAVE_LENGTH 1024
 #define DEFAULT_SAVE "default"
 #define MAX_FILE_NAME 100
-#define LOAD_NAME "default"
+#define LOAD_NAME "pawn"
 
 #define PIECE_SIZE 60
 #define PIECE_OFFSET (CHESS_SQUARE_SIZE / 8)

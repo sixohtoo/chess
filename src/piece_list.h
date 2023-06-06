@@ -4,8 +4,8 @@
 
 #include "types.h"
 
-PieceList initPieceList();
-PieceList addPiece(PieceList list, Piece piece);
-PieceList removePiece(PieceList list, Piece piece);
-void freePieceList(PieceList list);
+// PieceList initPieceList();
+PieceNode addPiece(PieceNode list, Piece piece);
+PieceNode removePiece(PieceNode list, Piece piece);
+void freePieceList(PieceNode list);
 #endif
