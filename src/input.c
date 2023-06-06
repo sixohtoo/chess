@@ -58,7 +58,7 @@ void mouseDownInput(App app, SDL_MouseButtonEvent e)
         {
             app->state->selected = piece;
             app->state->displaying = piece;
-            getLegalMoves(app);
+            app->state->displayedSquares = getLegalMoves(app->state, app->state->selected);
         }
         // printf("Selected piece");
     }
@@ -76,7 +76,7 @@ void mouseUpInput(App app, SDL_MouseButtonEvent e)
 
         if (isValidCoord(grid) && containsSquareList(app->state->displayedSquares, grid))
         {
-            moveSelectedPiece(app, grid);
+            moveSelectedPiece(app->state, grid);
         }
         else
         {

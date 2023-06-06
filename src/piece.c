@@ -2,12 +2,12 @@
 #include "square_list.h"
 #include "utils.h"
 
-void pawnMoves(App app);
-void rookMoves(App app);
-void knightMoves(App app);
-void bishopMoves(App app);
-void queenMoves(App app);
-void kingMoves(App app);
+SquareNode pawnMoves(State state, Piece piece);
+SquareNode rookMoves(State state, Piece piece);
+SquareNode knightMoves(State state, Piece piece);
+SquareNode bishopMoves(State state, Piece piece);
+SquareNode queenMoves(State state, Piece piece);
+SquareNode kingMoves(State state, Piece piece);
 
 /*
 Still need to code
@@ -15,7 +15,7 @@ stopping at pieces
 check
 en passant
 castling
-
+TODO: change getSquareFromCoord ipnuts
 */
 
 struct coord dirs[8] = {
@@ -28,32 +28,32 @@ struct coord dirs[8] = {
     {0, 1},
     {1, 1}};
 
-void getLegalMoves(App app)
+SquareNode getLegalMoves(State state, Piece piece)
 {
-    if (app->state->playerTurn != app->state->selected->colour)
-        return;
-    switch (app->state->displaying->type)
+    if (state->playerTurn != state->selected->colour)
+        return NULL;
+    switch (state->displaying->type)
     {
     case PAWN:
-        pawnMoves(app);
+        return pawnMoves(state, piece);
         break;
     case ROOK:
-        rookMoves(app);
+        return rookMoves(state, piece);
         break;
     case KNIGHT:
-        knightMoves(app);
+        return knightMoves(state, piece);
         break;
     case BISHOP:
-        bishopMoves(app);
+        return bishopMoves(state, piece);
         break;
     case QUEEN:
-        queenMoves(app);
+        return queenMoves(state, piece);
         break;
     case KING:
-        kingMoves(app);
+        return kingMoves(state, piece);
         break;
     default:
-        break;
+        return NULL;
     }
 }
 
@@ -70,16 +70,17 @@ int isValidGridCoord(struct coord c)
     return c.x >= 0 && c.x < NUM_SQUARES_ROW && c.y >= 0 && c.y < NUM_SQUARES_ROW;
 }
 
-void pawnMoves(App app)
+SquareNode pawnMoves(State state, Piece piece)
 {
-    Piece piece = app->state->selected;
+    // Piece piece = state->selected;
+    SquareNode squares = NULL;
     struct coord dirs[2] =
         {
             {(piece->colour * 1.0 - 0.5) * 2, 0},
             {(piece->colour * 1.0 - 0.5) * 2 * (!piece->moves + 1), 0}}; // double move on first move case
     struct coord c = {
-        app->state->selected->row,
-        app->state->selected->col};
+        piece->row,
+        piece->col};
     for (int i = 0; i < 2; i++)
     {
         struct coord dir = dirs[i];
@@ -89,13 +90,15 @@ void pawnMoves(App app)
                 c.y + dir.y};
         if (isValidGridCoord(newDir))
         {
-            Square square = getSquareFromCoord(app, newDir);
-            app->state->displayedSquares = addSquare(app->state->displayedSquares, square);
+            Square square = getSquareFromCoord(state->board, newDir);
+            squares = addSquare(squares, square);
+            // state->displayedSquares = addSquare(state->displayedSquares, square);
         }
     }
+    return squares;
 }
 
-void rookMoves(App app)
+SquareNode rookMoves(State state, Piece piece)
 {
     struct coord dirs[4] = {
         {1, 0},
@@ -103,8 +106,9 @@ void rookMoves(App app)
         {-1, 0},
         {0, 1}};
     struct coord c = {
-        app->state->selected->row,
-        app->state->selected->col};
+        piece->row,
+        piece->col};
+    SquareNode squares = NULL;
     for (int i = 0; i < 4; i++)
     {
         struct coord dir = dirs[i];
@@ -113,15 +117,17 @@ void rookMoves(App app)
             c.y + dir.y};
         while (isValidGridCoord(newDir))
         {
-            Square square = getSquareFromCoord(app, newDir);
-            app->state->displayedSquares = addSquare(app->state->displayedSquares, square);
+            Square square = getSquareFromCoord(state->board, newDir);
+            squares = addSquare(squares, square);
+            // state->displayedSquares = addSquare(state->displayedSquares, square);
             newDir.x += dir.x;
             newDir.y += dir.y;
         }
     }
+    return squares;
 }
 
-void knightMoves(App app)
+SquareNode knightMoves(State state, Piece piece)
 {
     struct coord dirs[8] = {
         {2, 1},
@@ -134,8 +140,9 @@ void knightMoves(App app)
         {1, 2}};
 
     struct coord c = {
-        app->state->selected->row,
-        app->state->selected->col};
+        piece->row,
+        piece->col};
+    SquareNode squares = NULL;
     for (int i = 0; i < 8; i++)
     {
         struct coord dir = dirs[i];
@@ -145,13 +152,15 @@ void knightMoves(App app)
                 c.y + dir.y};
         if (isValidGridCoord(newDir))
         {
-            Square square = getSquareFromCoord(app, newDir);
-            app->state->displayedSquares = addSquare(app->state->displayedSquares, square);
+            Square square = getSquareFromCoord(state->board, newDir);
+            squares = addSquare(squares, square);
+            // state->displayedSquares = addSquare(state->displayedSquares, square);
         }
     }
+    return squares;
 }
 
-void bishopMoves(App app)
+SquareNode bishopMoves(State state, Piece piece)
 {
     struct coord dirs[4] = {
         {-1, 1},
@@ -159,8 +168,9 @@ void bishopMoves(App app)
         {1, -1},
         {-1, -1}};
     struct coord c = {
-        app->state->selected->row,
-        app->state->selected->col};
+        piece->row,
+        piece->col};
+    SquareNode squares = NULL;
     for (int i = 0; i < 4; i++)
     {
         struct coord dir = dirs[i];
@@ -169,19 +179,22 @@ void bishopMoves(App app)
             c.y + dir.y};
         while (isValidGridCoord(newDir))
         {
-            Square square = getSquareFromCoord(app, newDir);
-            app->state->displayedSquares = addSquare(app->state->displayedSquares, square);
+            Square square = getSquareFromCoord(state->board, newDir);
+            squares = addSquare(squares, square);
+            // state->displayedSquares = addSquare(state->displayedSquares, square);
             newDir.x += dir.x;
             newDir.y += dir.y;
         }
     }
+    return squares;
 }
 
-void queenMoves(App app)
+SquareNode queenMoves(State state, Piece piece)
 {
     struct coord c = {
-        app->state->selected->row,
-        app->state->selected->col};
+        piece->row,
+        piece->col};
+    SquareNode squares = NULL;
     for (int i = 0; i < 8; i++)
     {
         struct coord dir = dirs[i];
@@ -190,19 +203,22 @@ void queenMoves(App app)
             c.y + dir.y};
         while (isValidGridCoord(newDir))
         {
-            Square square = getSquareFromCoord(app, newDir);
-            app->state->displayedSquares = addSquare(app->state->displayedSquares, square);
+            Square square = getSquareFromCoord(state->board, newDir);
+            squares = addSquare(squares, square);
+            // state->displayedSquares = addSquare(state->displayedSquares, square);
             newDir.x += dir.x;
             newDir.y += dir.y;
         }
     }
+    return squares;
 }
 
-void kingMoves(App app)
+SquareNode kingMoves(State state, Piece piece)
 {
     struct coord c = {
-        app->state->selected->row,
-        app->state->selected->col};
+        piece->row,
+        piece->col};
+    SquareNode squares = NULL;
     for (int i = 0; i < 8; i++)
     {
         struct coord dir = dirs[i];
@@ -212,34 +228,43 @@ void kingMoves(App app)
                 c.y + dir.y};
         if (isValidGridCoord(newDir))
         {
-            Square square = getSquareFromCoord(app, newDir);
-            app->state->displayedSquares = addSquare(app->state->displayedSquares, square);
+            Square square = getSquareFromCoord(state->board, newDir);
+            // state->displayedSquares = addSquare(state->displayedSquares, square);
+            squares = addSquare(squares, square);
         }
     }
+    return squares;
 }
 
-void moveSelectedPiece(App app, struct coord dest)
+void moveSelectedPiece(State state, struct coord dest)
 {
-    Piece selected = app->state->selected;
+    Piece selected = state->selected;
     selected->square->piece = 0; // NULL makes linter unhappy. whatever.
-    Square dest_square = app->state->board[dest.x][dest.y];
+    Square dest_square = state->board[dest.x][dest.y];
     selected->square = dest_square;
     dest_square->piece = selected;
     selected->row = dest.x;
     selected->col = dest.y;
     selected->img_dest->x = dest_square->coord_x;
     selected->img_dest->y = dest_square->coord_y;
-    app->state->displaying = 0;
+    state->displaying = 0;
     selected->moves += 1;
-    if (!app->state->playerTurn)
-        app->state->turn += 1;
-    app->state->playerTurn = !app->state->playerTurn;
-    app->state->displayedSquares = clearSquareList(app->state->displayedSquares);
+    if (!state->playerTurn)
+        state->turn += 1;
+    state->playerTurn = !state->playerTurn;
+    state->displayedSquares = clearSquareList(state->displayedSquares);
 }
 
-PieceNode getAttackedSquares(State state)
+SquareNode getAttackedSquares(State state)
 {
     enum Colour attackPlayer = !state->playerTurn;
-    // for
-    return 0;
+    PieceNode curr = state->pieces;
+    SquareNode squares = NULL;
+    while (curr != NULL)
+    {
+        if (curr->piece->colour != attackPlayer)
+            continue;
+        squares = getLegalMoves(state, curr->piece);
+    }
+    return squares;
 }

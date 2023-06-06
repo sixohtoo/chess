@@ -3,9 +3,9 @@
 #ifndef GAME_PIECE
 #define GAME_PIECE
 
-void getLegalMoves(App app);
+SquareNode getLegalMoves(State state, Piece piece);
 struct coord coordFromPiece(Piece piece);
-void moveSelectedPiece(App app, struct coord dest);
-PieceNode getAttackedSquares(State state);
+void moveSelectedPiece(State state, struct coord dest);
+SquareNode getAttackedSquares(State state);
 
 #endif

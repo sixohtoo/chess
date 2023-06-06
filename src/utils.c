@@ -37,9 +37,9 @@ Piece piece_from_coord(Board board, struct coord c)
     return board[c.x][c.y]->piece;
 }
 
-Square getSquareFromCoord(App app, struct coord c)
+Square getSquareFromCoord(Board board, struct coord c)
 {
-    return app->state->board[c.x][c.y]; // RONEN CHANGED THIS.
+    return board[c.x][c.y]; // RONEN CHANGED THIS.
 }
 
 int coordEqual(struct coord a, struct coord b)
