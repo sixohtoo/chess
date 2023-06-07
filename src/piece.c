@@ -7,15 +7,18 @@ SquareNode rookMoves(State state, Piece piece);
 SquareNode knightMoves(State state, Piece piece);
 SquareNode bishopMoves(State state, Piece piece);
 SquareNode queenMoves(State state, Piece piece);
-SquareNode kingMoves(State state, Piece piece);
+SquareNode kingMoves(State state, Piece piece, int all);
+SquareNode kingMovesCastle(State state, Piece piece);
+int isEmptySquare(State state, SquareNode list, Square square);
 
 /*
 Still need to code
-stopping at pieces
-check
+TODO: save legal moves in piece to avoid calculating multiple times
+check ??
+pawn taking
 en passant
 castling
-TODO: change getSquareFromCoord ipnuts
+promoting
 */
 
 struct coord dirs[8] = {
@@ -28,11 +31,12 @@ struct coord dirs[8] = {
     {0, 1},
     {1, 1}};
 
-SquareNode getLegalMoves(State state, Piece piece)
+SquareNode getLegalMoves(State state, Piece piece, int castling)
 {
-    if (state->playerTurn != state->selected->colour)
-        return NULL;
-    switch (state->displaying->type)
+    // if (state->playerTurn != piece->colour) // will have to change this eventually
+    //     return NULL;
+    printPieceType(piece);
+    switch (piece->type)
     {
     case PAWN:
         return pawnMoves(state, piece);
@@ -50,7 +54,7 @@ SquareNode getLegalMoves(State state, Piece piece)
         return queenMoves(state, piece);
         break;
     case KING:
-        return kingMoves(state, piece);
+        return kingMoves(state, piece, castling);
         break;
     default:
         return NULL;
@@ -88,7 +92,7 @@ SquareNode pawnMoves(State state, Piece piece)
             {
                 c.x + dir.x,
                 c.y + dir.y};
-        if (isValidGridCoord(newDir))
+        if (isValidGridCoord(newDir) && isEmptySquare(state, squares, getSquareFromCoord(state->board, newDir)))
         {
             Square square = getSquareFromCoord(state->board, newDir);
             squares = addSquare(squares, square);
@@ -115,7 +119,7 @@ SquareNode rookMoves(State state, Piece piece)
         struct coord newDir = {
             c.x + dir.x,
             c.y + dir.y};
-        while (isValidGridCoord(newDir))
+        while (isValidGridCoord(newDir) && isEmptySquare(state, squares, getSquareFromCoord(state->board, newDir)))
         {
             Square square = getSquareFromCoord(state->board, newDir);
             squares = addSquare(squares, square);
@@ -150,7 +154,7 @@ SquareNode knightMoves(State state, Piece piece)
             {
                 c.x + dir.x,
                 c.y + dir.y};
-        if (isValidGridCoord(newDir))
+        if (isValidGridCoord(newDir) && isEmptySquare(state, squares, getSquareFromCoord(state->board, newDir)))
         {
             Square square = getSquareFromCoord(state->board, newDir);
             squares = addSquare(squares, square);
@@ -177,7 +181,7 @@ SquareNode bishopMoves(State state, Piece piece)
         struct coord newDir = {
             c.x + dir.x,
             c.y + dir.y};
-        while (isValidGridCoord(newDir))
+        while (isValidGridCoord(newDir) && isEmptySquare(state, squares, getSquareFromCoord(state->board, newDir)))
         {
             Square square = getSquareFromCoord(state->board, newDir);
             squares = addSquare(squares, square);
@@ -201,7 +205,7 @@ SquareNode queenMoves(State state, Piece piece)
         struct coord newDir = {
             c.x + dir.x,
             c.y + dir.y};
-        while (isValidGridCoord(newDir))
+        while (isValidGridCoord(newDir) && isEmptySquare(state, squares, getSquareFromCoord(state->board, newDir)))
         {
             Square square = getSquareFromCoord(state->board, newDir);
             squares = addSquare(squares, square);
@@ -213,12 +217,13 @@ SquareNode queenMoves(State state, Piece piece)
     return squares;
 }
 
-SquareNode kingMoves(State state, Piece piece)
+SquareNode kingMoves(State state, Piece piece, int castling)
 {
     struct coord c = {
         piece->row,
         piece->col};
     SquareNode squares = NULL;
+    SquareNode illegal = getAttackedSquares(state);
     for (int i = 0; i < 8; i++)
     {
         struct coord dir = dirs[i];
@@ -226,14 +231,25 @@ SquareNode kingMoves(State state, Piece piece)
             {
                 c.x + dir.x,
                 c.y + dir.y};
-        if (isValidGridCoord(newDir))
+        if (isValidGridCoord(newDir) &&
+            isEmptySquare(state, squares, getSquareFromCoord(state->board, newDir)) &&
+            !containsSquareList(illegal, newDir))
         {
             Square square = getSquareFromCoord(state->board, newDir);
             // state->displayedSquares = addSquare(state->displayedSquares, square);
             squares = addSquare(squares, square);
         }
     }
+    if (castling)
+    {
+        squares = combineSquareList(squares, kingMovesCastle(state, piece));
+    }
     return squares;
+}
+
+SquareNode kingMovesCastle(State state, Piece piece)
+{
+    return NULL;
 }
 
 void moveSelectedPiece(State state, struct coord dest)
@@ -259,12 +275,27 @@ SquareNode getAttackedSquares(State state)
 {
     enum Colour attackPlayer = !state->playerTurn;
     PieceNode curr = state->pieces;
-    SquareNode squares = NULL;
-    while (curr != NULL)
+    SquareNode squares = 0;
+    while (curr != 0)
     {
         if (curr->piece->colour != attackPlayer)
+        {
+            curr = curr->next;
             continue;
-        squares = getLegalMoves(state, curr->piece);
+        }
+        squares = combineSquareList(squares, getLegalMoves(state, curr->piece, 0));
+        curr = curr->next;
     }
     return squares;
+}
+
+int isEmptySquare(State state, SquareNode list, Square square)
+{
+    if (!square->piece)
+        return 1;
+    if (square->piece->colour != state->playerTurn)
+    {
+        addSquare(list, square);
+    }
+    return 0;
 }

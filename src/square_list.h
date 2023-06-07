@@ -9,4 +9,5 @@ SquareNode clearSquareList(SquareNode list);
 SquareNode removeSquare(SquareNode list, Square square);
 void freeSquareList(SquareNode list);
 int containsSquareList(SquareNode list, struct coord c);
+SquareNode combineSquareList(SquareNode a, SquareNode b);
 #endif

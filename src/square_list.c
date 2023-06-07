@@ -111,3 +111,16 @@ int containsSquareList(SquareNode list, struct coord c)
     }
     return 0;
 }
+
+SquareNode combineSquareList(SquareNode a, SquareNode b)
+{
+    if (a == NULL)
+        return b;
+    SquareNode curr = a;
+    while (curr->next != NULL)
+    {
+        curr = curr->next;
+    }
+    curr->next = b;
+    return a;
+}

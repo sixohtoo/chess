@@ -58,7 +58,7 @@ void mouseDownInput(App app, SDL_MouseButtonEvent e)
         {
             app->state->selected = piece;
             app->state->displaying = piece;
-            app->state->displayedSquares = getLegalMoves(app->state, app->state->selected);
+            app->state->displayedSquares = piece->colour == app->state->playerTurn ? getLegalMoves(app->state, app->state->selected, 1) : app->state->displayedSquares;
         }
         // printf("Selected piece");
     }
